@@ -1,158 +1,153 @@
-//Agc cse student database
+//Writing Dbms backend
+
+//Note i am working with Csv files
+//So dont try to modifying the code
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 using namespace std;
+
+//Global User
+string USER;
+
 class Student
 {
 private:
-    string name, section, father_name, email;
-    long roll_number, contact;
-    double marks;
-    string User;
-    //Vere eh show function hai user vaste nahi sirf backend vaste hai
-    void show()
-    {
-        cout << name << " " << roll_number << " " << section << " " << father_name << " " << email << " " << contact << endl;
-    }
+    long Roll_number, Contact;
+    string Name, Fathers_name, Email, Section;
+    double Marks;
 
-public:
-    // vere contructor vich design krdi jo pehle ave jive login function
-    // fer tenu main vicho krvan di lor nahi hovegi
-    // mai kr reha login design krdi apne hisab naal okay??
-    Student()
+    //String simplifier
+    char *simplifier(string character_set)
     {
-        login();
-    }
-    void login()
-    {
-        string user, password, user1;
-        fstream Login, File;
-        User = user;
-        Login.open("Pass.txt", ios::in | ios::app);
-        //Pritpal mai simple likh reha tu apne hisab naal likhdi
-        if (!Login)
+        char *orignal;
+        for (int i = 0; i < character_set.length(); i++)
         {
-            //es jagah te initial stage hai jado koi user na hove
-            cout << "Intialally no user" << endl;
-            cout << "become a user" << endl;
-            cout << "Enter user:";
-            cin >> user;
-            cout << "Enter password:";
-            cin >> password;
-            cout << "U are user now";
-            //veere ethe nave user di file be gi
-            File.open(user + ".txt", ios::out);
-            Login.write((char *)this, sizeof(*this));
-            Login.close();
+            orignal[i] = character_set[i];
+        }
+    }
+    //Simple login function
+    void Login()
+    {
+        string user, password, reader;
+        ifstream login;
+        login.open("pass.txt", ios::in);
+        bool check = false;
+        cout << "Enter user name:";
+        cout << "Enter password:";
+        cin >> user >> password;
+        while (login >> reader)
+        {
+            if (user == reader)
+            {
+                check = true;
+            }
+        }
+        if (check)
+        {
+            USER = user + ".csv";
+            return;
         }
         else
         {
-        x:
-            cout << "Enter user:";
-            cin >> user;
-            cout << "Enter password:";
-            cin >> password;
-            int k = 0;
-            while (Login >> user1)
-            {
-                if (user == user1)
-                {
-                    k = 1;
-                    cout << "Now u can continue->";
-                    return;
-                }
-            }
-            if (!k)
-            {
-                //tu ethe exit wala option v padi bhave
-                //Nale ethe nve user bnana da option v padi
-                //sign up and sign in da
-                goto x;
-            }
+            //ethe ik sign up function call hovega jehra mai define krga
+            cout << "u are not a member want to sign or exit";
+            //sign_up()
+            //exit()
+        }
+        login.close();
+    }
+
+    //Sign up function
+    void Sign_up()
+    {
+        string user, password;
+        ofstream signup;
+        signup.open("pass.txt", ios::app);
+        cout << "Enter new user name";
+        cout << "Enter New password";
+        cin >> user >> password;
+        signup << user << " " << password;
+        signup.close();
+        cout << "U are a new user";
+
+        // File initializing of new user
+        signup.open(user + ".csv", ios::out);
+        signup.close();
+    }
+
+public:
+    //Default constructor
+    //Pritapal Apna front end ethe likhi jehra subto pehle Show hovega
+    Student()
+    {
+        system("cls");
+        int option;
+        cout << "1.sign up and 2.login;";
+        cin >> option;
+        switch (option)
+        {
+        case 1:
+            Sign_up();
+            break;
+
+        case 2:
+            Login();
+            break;
         }
     }
-    void Add(string Name, long Roll, string Section, string Father, string Email, long Contact, double Marks)
+
+    //Writing Add function
+    //This function is Takes agrument and add to file simple
+    void Add(string name, long roll, string section, double marks, string fathers_name, long contact, string email = "No id")
     {
-        //Eh add operation function da ui design vekli
-        //Asi main function vich design krni hai te eh bas argument reciever hovega
-        ofstream File;
-        File.open(User + ".txt", ios::app);
-        name = Name;
-        roll_number = Roll;
-        marks = Marks;
-        section = Section;
-        father_name = Father;
-        email = Email;
-        contact = Contact;
-        File.write((char *)this, sizeof(*this));
+        //Main variable assigning
+        Name = name;
+        Roll_number = roll;
+        Section = section;
+        Marks = marks;
+        Fathers_name = fathers_name;
+        Contact = contact;
+        Email = email;
+
+        //Add method
+        ofstream add;
+        add.open(USER, ios::app);
+        //Writing into csv
+        add << Name << "," << Roll_number << "," << Section << "," << Marks << "," << Fathers_name << "," << Contact << "," << Email << endl;
+        add.close();
+    }
+    void Display()
+    {
+        //Defining varibale for Reading
+        string name, fathers_name, section, email, roll, contact, marks;
+        // Reading method
+        fstream File(USER);
+        //Exception
+        if (!File.is_open())
+        {
+            cout << "Unable to open";
+        }
+        while (File.good())
+        {
+            //Using getline
+            getline(File, name, ',');
+            getline(File, roll, ',');
+            getline(File, section, ',');
+            getline(File, marks, ',');
+            getline(File, fathers_name, ',');
+            getline(File, contact, ',');
+            getline(File, email, '\n');
+            // Writing to console
+            cout << name << " " << roll << " " << section << " " << marks << " " << fathers_name << " " << contact << " " << email << endl;
+        }
+        //closing file
         File.close();
-    }
-    void View()
-    {
-        ifstream File;
-        File.open(User + ".txt", ios::in);
-        while (File.read((char *)this, sizeof(*this)))
-        {
-            show();
-        }
-        File.close();
-    }
-    //veere eh func argument wala hai eh v design krli main funct teri zimewari hai Ui main
-    //Veere delete te update dono verified honge bool type hage dono
-    bool Delete(long roll)
-    {
-        bool check = false;
-        fstream File, Del;
-        File.open(User + ".txt", ios::in | ios::ate);
-        Del.open("Temp.txt", ios::out);
-        while (File.read((char *)this, sizeof(*this)))
-        {
-            if (roll != roll_number)
-            {
-                Del.write((char *)this, sizeof(*this));
-            }
-            else
-            {
-                check = true;
-            }
-        }
-        File.close();
-        Del.close();
-        char *user;
-        for (int i = 0; i < User.length(); i++)
-        {
-            user[i] = User[i];
-        }
-        std::remove(user);
-        std::rename("Temp.txt", user);
-        return check;
-    }
-    bool Update(long roll, double Marks)
-    {
-        bool check = false;
-        fstream File;
-        File.open(User, ios::ate | ios::in);
-        File.seekg(0);
-        while (File.read((char *)this, sizeof(*this)))
-        {
-            if (roll == roll_number)
-            {
-                check = true;
-                File.seekg(File.tellp() - sizeof(*this));
-                marks = Marks;
-                File.write((char *)this, sizeof(*this));
-            }
-        }
-        return check;
-    }
-    ~Student()
-    {
-        cout << "Good bye.....";
     }
 };
+
 int main()
 {
-    Student info;
     return 0;
 }
