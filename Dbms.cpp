@@ -149,5 +149,36 @@ public:
 
 int main()
 {
+    Student info;
+    string name, section, email, father_name;
+    double marks;
+    long contact,roll;
+    char choice;
+    cout<<"\t\tWelcome to the CSE Student Management\n"<<endl;
+    cout<<"\t\t\t1. Add Student Data\n\t\t\t2. Display Students Data\n\t\t\t3. Update Student Data\n\t\t\t4. Delete Student Data\n";
+    cin>>choice;
+    switch (choice)
+    {
+        case '1':
+        cout<<"Enter Name of the Student : "<<endl;
+        getline(cin,name);
+        cout<<"Enter the Father Name : ";
+        getline(cin,father_name);
+        cout<<"Enter the Roll Number of the Student : ";
+        cin>>roll;
+        cout<<"Enter the Section : ";
+        getline(cin,section);
+        cout<<"Enter the E-mail : ";
+        getline(cin,email);
+        cout<<"Enter the Contact Number : ";
+        cin>>contact;
+        cout<<"Enter the Marks of the Student : ";
+        cin>>marks;
+        info.Add(name, roll, section, marks, father_name, contact, email);    
+        
+        case '2':
+        info.Display();
+
+    }
     return 0;
 }
