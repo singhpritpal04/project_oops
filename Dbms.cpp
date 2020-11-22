@@ -172,15 +172,18 @@ public:
     void Update(long roll, double marks)
     {
         fstream update;
-        update.open(USER, ios::ate | ios::in);
+        update.open(USER, ios::ate | ios::in | ios::out);
+        update.seekg(0);
         while (update.read((char *)this, sizeof(*this)))
         {
             if (roll == Roll_number)
             {
-                update.seekp(update.tellp() - sizeof(*this));
-                this->Marks = marks;
+                break;
             }
         }
+        update.seekp(update.tellp() - sizeof(*this));
+        this->Marks = marks;
+        update.write((char *)this, sizeof(*this));
         update.close();
     }
     void Display()
