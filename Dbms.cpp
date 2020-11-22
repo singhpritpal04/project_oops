@@ -161,16 +161,22 @@ public:
                 Temp.write((char *)this, sizeof(*this));
             }
         }
-        if (count != 0)
+        if (count != CountRecords())
         {
             Temp.close();
             Read.close();
             std::remove(USER.c_str());
             std::rename("Temp.txt", USER.c_str());
         }
+        else
+        {
+            Temp.close();
+            Read.close();
+        }
     }
     void Update(long roll, double marks)
     {
+        bool check = false;
         fstream update;
         update.open(USER, ios::ate | ios::in | ios::out);
         update.seekg(0);
@@ -178,13 +184,33 @@ public:
         {
             if (roll == Roll_number)
             {
+                check = true;
                 break;
             }
         }
-        update.seekp(update.tellp() - sizeof(*this));
-        this->Marks = marks;
-        update.write((char *)this, sizeof(*this));
-        update.close();
+        if (check)
+        {
+            update.seekp(update.tellp() - sizeof(*this));
+            this->Marks = marks;
+            update.write((char *)this, sizeof(*this));
+            update.close();
+        }
+        else
+        {
+            update.close(); 
+        }
+    }
+    int CountRecords()
+    {
+        int Count = 0;
+        ifstream File;
+        File.open(USER, ios::in);
+        while (File.read((char *)this, sizeof(*this)))
+        {
+            Count++;
+        }
+        File.close();
+        return Count;
     }
     void Display()
     {
