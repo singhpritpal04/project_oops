@@ -1,10 +1,8 @@
-//Writing Dbms backend
-
-//Note i am working with Csv files
-//So dont try to modifying the code
+            //AGC Student Database Management System
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iomanip>
 #include <conio.h>
 #include <process.h>
 #include <stdio.h>
@@ -21,9 +19,10 @@ private:
     double Marks;
     void show()
     {
-        cout << left<< setw(15) Name << " " << setw(15) << Fathers_name << " " << setw(25)<< Email << " " << setw(5)<< Marks << " " << setw(8)<< Roll_number << " " << setw(10)<< Contact << endl;
+
+        cout <<left<< setw(15) <<Name << setw(15) << Fathers_name << setw(25)<< Email<< setw(8)<< Marks << setw(20)<< Roll_number << setw(12)<< Contact << endl;
     }
-    //String simplifier
+    
     //Simple login function
     void Login()
     {
@@ -32,10 +31,12 @@ private:
         ifstream login;
         login.open("pass.txt", ios::in);
         bool check = false;
-        cout << "Enter user name:";
+        cout<<"\t\t___________________________________________\n\n";
+        cout << "\t\tEnter User Name : ";
         cin >> user;
-        cout << "Enter password:";
+        cout << "\n\t\tEnter Password : ";
         cin >> password;
+        cout<<"\t\t___________________________________________\n";
         while (login >> reader)
         {
             if (user == reader)
@@ -50,10 +51,7 @@ private:
         }
         else
         {
-            //ethe ik sign up function call hovega jehra mai define krga
             cout << "u are not a member want to sign or exit";
-            //sign_up()
-            //exit()
         }
         login.close();
     }
@@ -65,13 +63,15 @@ private:
         string user, password;
         ofstream signup;
         signup.open("pass.txt", ios::app);
-        cout << "Enter new user name";
+        cout<<"\t\tCreating New User :)\n";
+        cout<<"\t\t________________________________________________________________\n";
+        cout << "\n\t\tEnter New User Name : ";
         cin >> user;
-        cout << "Enter New password";
+        cout << "\n\t\tEnter your Password : ";
         cin >> password;
         signup << user << " " << password;
         signup.close();
-        cout << "U are a new user";
+        cout << "\t\tYou are a New User :)"<<endl;
 
         // File initializing of new user
         signup.open(user + ".txt", ios::out);
@@ -79,14 +79,18 @@ private:
     }
 
 public:
+    
     //Default constructor
-    //Pritapal Apna front end ethe likhi jehra subto pehle Show hovega
     Student()
     {
         system("cls");
         int option;
-        cout << "\n\t\tWelcome to Agc Student Management system" << endl;
-        cout << "\n\t\t1.sign up\n\t\t 2.login\n\t\t option:";
+        cout<<"\t\t____________________________________________"<<endl;
+        cout << "\n\t\t  Welcome to Agc Student Management System" << endl;
+        cout<<"\t\t____________________________________________"<<endl;
+        cout << "\n\t\t  1. Sign Up\n\n\t\t  2. Login"<<endl;
+        cout<<"\t\t____________________________________________"<<endl;
+        cout<<"\n\t\t  Enter your Choice here : ";
         cin >> option;
         switch (option)
         {
@@ -101,7 +105,7 @@ public:
     }
 
     //Writing Add function
-    //This function is Takes agrument and add to file simple
+    //This function Takes agrument and add to file simple
     void Add(string name, long roll, string section, double marks, string fathers_name, long contact, string email = "No id")
     {
         //Main variable assigning
@@ -125,7 +129,7 @@ public:
         search.open(USER, ios::in);
         if (!search)
         {
-            cout << "Unable to open...";
+            cout << "Unable to open :(";
         }
         else
         {
@@ -141,7 +145,7 @@ public:
             search.clear();
             if (!flag)
             {
-                cout << "Record not found";
+                cout << "Record not found :(";
             }
             search.close();
         }
@@ -212,6 +216,9 @@ public:
         File.close();
         return Count;
     }
+
+    //Display function
+
     void Display()
     {
         system("cls");
@@ -224,8 +231,11 @@ public:
         }
         else
         {
+            cout <<left<< setw(15) <<"Student Name" << setw(15) << "Father Name" << setw(25)<< "Email" << setw(8)<< "Marks" << setw(20)<< "Roll Number" << setw(12)<< "Contact" << endl;
+            cout<<"_______________________________________________________________________________________________\n";
             while (Read.read((char *)this, sizeof(*this)))
             {
+                
                 show();
             }
             Read.clear();
@@ -234,6 +244,8 @@ public:
         getch();
     }
 };
+
+//Main function
 
 int main()
 {
@@ -246,10 +258,11 @@ int main()
     do
     {
         system("cls");
-        cout << "\t\tWelcome to the CSE Student Management\n"
-             << endl;
-        cout << "\t\t\t1. Add Student Data\n\t\t\t2. Display Students Data\n\t\t\t3.Search\n\t\t\t4. Update Student Data\n\t\t\t5. Delete Student Data\n\t\t\t 6.Exit";
-        cout << "\n\t\t\tOption:";
+        cout << "\t\t   Welcome to the CSE Student Management\n";
+        cout<<"\t\t___________________________________________\n\n";
+        cout << "\t\t   1. Add Student Data\n\n\t\t   2. Display Students Data\n\n\t\t   3. Search Student Data\n\n\t\t   4. Update Student Data\n\n\t\t   5. Delete Student Data\n\n\t\t   6.Exit\n";
+        cout<<"\t\t___________________________________________\n\n";
+        cout << "\t\t\t Enter your Choice here : ";
         cin >> choice;
         switch (choice)
         {
@@ -281,22 +294,24 @@ int main()
         }
         case '3':
         {
-            cout << "Enter Roll number to search:";
+            cout << "Enter Roll number to Search : ";
             cin >> roll;
             info.Search(roll);
-            getch();
+            getch(); 
             break;
         }
         case '4':
         {
-            cout << "Enter rool and marks:";
-            cin >> roll >> marks;
+            cout << "Enter Roll Number : ";
+            cin >> roll;
+            cout<<"Enter Marks : ";
+            cin>>marks;
             info.Update(roll, marks);
             break;
         }
         case '5':
         {
-            cout << "Enter roll number:";
+            cout << "Enter Roll Number : ";
             cin >> roll;
             info.Delete(roll);
             break;
@@ -307,7 +322,7 @@ int main()
         }
         default:
         {
-            cout << "Invalid option:";
+            cout << "Invalid option :(\n";
         }
         }
     } while (choice != '6');
